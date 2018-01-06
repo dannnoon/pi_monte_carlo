@@ -1,0 +1,35 @@
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<GridPane fx:controller="sample.Controller" style="-fx-background-color: white"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+
+    <columnConstraints>
+        <ColumnConstraints prefWidth="480"/>
+        <ColumnConstraints prefWidth="800"/>
+    </columnConstraints>
+
+    <VBox alignment="TOP_CENTER" GridPane.columnIndex="0" style="-fx-padding: 15px" spacing="10">
+        <TitledPane text="Options">
+            <VBox spacing="10" style="-fx-padding: 10px">
+                <VBox spacing="2">
+                    <Text text="Samples"/>
+                    <TextField fx:id="samplesCountField"/>
+                </VBox>
+                <CheckBox text="Show preview" fx:id="showPreviewCheckbox" selected="true"/>
+            </VBox>
+        </TitledPane>
+
+        <Button text="Calculate" style="-fx-font-size: 250%" disable="true" fx:id="calculateButton"/>
+
+        <VBox spacing="2" alignment="CENTER" fx:id="resultContainer" visible="false">
+            <Text text="Result" style="-fx-font-size: 200%"/>
+            <Text text="3.41" fx:id="resultField"/>
+        </VBox>
+
+        <ProgressBar visible="false" fx:id="progress"/>
+    </VBox>
+
+    <Canvas width="800" height="800" fx:id="canvas" GridPane.columnIndex="1"/>
+</GridPane>

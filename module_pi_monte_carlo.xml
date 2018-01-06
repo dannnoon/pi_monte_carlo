@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_pi_monte_carlo" default="compile.module.pi_monte_carlo">
+  <dirname property="module.pi_monte_carlo.basedir" file="${ant.file.module_pi_monte_carlo}"/>
+  
+  <property name="module.jdk.home.pi_monte_carlo" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.pi_monte_carlo" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.pi_monte_carlo" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.pi_monte_carlo" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="pi_monte_carlo.output.dir" value="${module.pi_monte_carlo.basedir}/out/production/pi_monte_carlo"/>
+  <property name="pi_monte_carlo.testoutput.dir" value="${module.pi_monte_carlo.basedir}/out/test/pi_monte_carlo"/>
+  
+  <path id="pi_monte_carlo.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="pi_monte_carlo.module.production.classpath">
+    <path refid="${module.jdk.classpath.pi_monte_carlo}"/>
+    <path refid="library.kotlinjavaruntime.classpath"/>
+  </path>
+  
+  <path id="pi_monte_carlo.runtime.production.module.classpath">
+    <pathelement location="${pi_monte_carlo.output.dir}"/>
+    <path refid="library.kotlinjavaruntime.classpath"/>
+  </path>
+  
+  <path id="pi_monte_carlo.module.classpath">
+    <path refid="${module.jdk.classpath.pi_monte_carlo}"/>
+    <pathelement location="${pi_monte_carlo.output.dir}"/>
+    <path refid="library.kotlinjavaruntime.classpath"/>
+  </path>
+  
+  <path id="pi_monte_carlo.runtime.module.classpath">
+    <pathelement location="${pi_monte_carlo.testoutput.dir}"/>
+    <pathelement location="${pi_monte_carlo.output.dir}"/>
+    <path refid="library.kotlinjavaruntime.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.pi_monte_carlo">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.pi_monte_carlo">
+    <patternset refid="excluded.from.module.pi_monte_carlo"/>
+  </patternset>
+  
+  <path id="pi_monte_carlo.module.sourcepath">
+    <dirset dir="${module.pi_monte_carlo.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.pi_monte_carlo" depends="compile.module.pi_monte_carlo.production,compile.module.pi_monte_carlo.tests" description="Compile module pi_monte_carlo"/>
+  
+  <target name="compile.module.pi_monte_carlo.production" depends="register.custom.compilers" description="Compile module pi_monte_carlo; production classes">
+    <mkdir dir="${pi_monte_carlo.output.dir}"/>
+    <javac2 destdir="${pi_monte_carlo.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.pi_monte_carlo}/javac">
+      <compilerarg line="${compiler.args.pi_monte_carlo}"/>
+      <bootclasspath refid="pi_monte_carlo.module.bootclasspath"/>
+      <classpath refid="pi_monte_carlo.module.production.classpath"/>
+      <src refid="pi_monte_carlo.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.pi_monte_carlo"/>
+    </javac2>
+    
+    <copy todir="${pi_monte_carlo.output.dir}">
+      <fileset dir="${module.pi_monte_carlo.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.pi_monte_carlo.tests" depends="register.custom.compilers,compile.module.pi_monte_carlo.production" description="compile module pi_monte_carlo; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.pi_monte_carlo" description="cleanup module">
+    <delete dir="${pi_monte_carlo.output.dir}"/>
+    <delete dir="${pi_monte_carlo.testoutput.dir}"/>
+  </target>
+</project>
