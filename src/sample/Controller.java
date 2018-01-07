@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.VBox;
@@ -89,7 +90,7 @@ public class Controller {
         new Thread(() -> {
             PiMonteCarloCalculator calculator = new PiMonteCarloCalculator(samples);
             WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
-            calculator.setPointListener(point -> writePixelPoint(image.getPixelWriter(), point));
+            calculator.setPointListener(point -> writePixelPoint(image.getPixelWriter(), image.getPixelReader(), point));
 
             double result = calculator.calculate();
             showResult(result);
@@ -154,23 +155,40 @@ public class Controller {
         });
     }
 
-    private void writePixelPoint(PixelWriter writer, MonteCarloPoint point) {
+    private void writePixelPoint(PixelWriter writer, PixelReader pixelReader, MonteCarloPoint point) {
         int x = (int) (canvas.getWidth() * point.getPoint2D().getX());
         int y = (int) (canvas.getHeight() * point.getPoint2D().getY());
 
-        Color color = getPointColor(point);
+        Color currentColor = pixelReader.getColor(x, y);
+        Color color = getPointColor(point, currentColor);
         writer.setColor(x, y, color);
     }
 
     @NotNull
-    private Color getPointColor(MonteCarloPoint point) {
+    private Color getPointColor(MonteCarloPoint point, Color currentColor) {
         Color color;
+
+        double opacity = calculateOpacity(currentColor.getOpacity());
+
         if (point.isInside()) {
-            color = new Color(1, 0, 1, 1);
+            color = new Color(0, 0, 1, opacity);
         } else {
-            color = new Color(1, 1, 0, 1);
+            color = new Color(1, 0, 0, opacity);
         }
+
         return color;
+    }
+
+    private double calculateOpacity(double opacity) {
+        if (opacity < 1) {
+            opacity += 0.02;
+        }
+
+        if (opacity > 1) {
+            opacity = 1;
+        }
+
+        return opacity;
     }
 
     private void initializeCleanCanvas() {

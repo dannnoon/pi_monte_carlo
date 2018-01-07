@@ -12,8 +12,6 @@ class PiMonteCarloCalculator(private var samples: Int) : PiCalculator {
 
     var pointListener: MonteCarloPointListener? = null
 
-    private fun createRandomPoint() = MonteCarloPoint(Point2D(Math.random(), Math.random()))
-
     override fun calculate(): Double {
         var insidePoints = 0
 
@@ -30,6 +28,8 @@ class PiMonteCarloCalculator(private var samples: Int) : PiCalculator {
 
         return countWithMonteCarloMethod(insidePoints)
     }
+
+    private fun createRandomPoint() = MonteCarloPoint(Point2D(Math.random(), Math.random()))
 
     private fun isInsideOfCircle(it: Point2D) =
             Math.pow(it.x - RANGE / 2, 2.0) + Math.pow(it.y - RANGE / 2, 2.0) <= Math.pow(RANGE / 2, 2.0)
