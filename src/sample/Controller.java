@@ -1,13 +1,12 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -16,10 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import org.jetbrains.annotations.NotNull;
-import sample.algorithm.MonteCarloPoint;
 import sample.algorithm.PiMonteCarloCalculator;
-
-import java.util.Arrays;
+import sample.model.MonteCarloPoint;
+import sample.model.PiResult;
 
 public class Controller {
 
@@ -37,12 +35,21 @@ public class Controller {
     private ProgressBar progress;
     @FXML
     private CheckBox showPreviewCheckbox;
+    @FXML
+    private TitledPane allResultsPanel;
+    @FXML
+    private ListView<PiResult> allResultsList;
+    @FXML
+    private Text averageField;
+
+    private final ObservableList<PiResult> results = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         initializeCleanCanvas();
         initializeSamplesField();
         initializeCalculateButton();
+        initializePreviousResultView();
     }
 
     private void initializeSamplesField() {
@@ -67,6 +74,11 @@ public class Controller {
         });
     }
 
+    private void initializePreviousResultView() {
+        allResultsPanel.setExpanded(false);
+        allResultsList.setItems(results);
+    }
+
     private int getSamples() {
         return Integer.parseInt(samplesCountField.getText());
     }
@@ -81,6 +93,7 @@ public class Controller {
 
             double result = calculator.calculate();
             showResult(result);
+            updateResultList(samples, result);
 
             if (showPreviewCheckbox.selectedProperty().get()) {
                 drawPreview(image);
@@ -88,6 +101,29 @@ public class Controller {
 
             postCalculationViewActions();
         }).start();
+    }
+
+    private void updateResultList(int samples, double result) {
+        double averagePiValue = countAveragePiValue(result);
+
+        Platform.runLater(() -> {
+            results.add(0, new PiResult(result, samples));
+            averageField.setText(Double.toString(averagePiValue));
+
+            if (allResultsPanel.isDisable()) {
+                allResultsPanel.setDisable(false);
+            }
+        });
+    }
+
+    private double countAveragePiValue(double lastResult) {
+        double result = lastResult;
+
+        for (PiResult pi : results) {
+            result += pi.getValue();
+        }
+
+        return result / (results.size() + 1);
     }
 
     private void preCalculationViewActions() {

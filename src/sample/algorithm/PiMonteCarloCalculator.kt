@@ -1,6 +1,7 @@
 package sample.algorithm
 
 import javafx.geometry.Point2D
+import sample.model.MonteCarloPoint
 
 class PiMonteCarloCalculator(private var samples: Int) : PiCalculator {
 

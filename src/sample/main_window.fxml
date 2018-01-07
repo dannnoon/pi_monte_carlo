@@ -1,7 +1,7 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.*?>
 <GridPane fx:controller="sample.Controller" style="-fx-background-color: white"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
 
@@ -15,13 +15,13 @@
             <VBox spacing="10" style="-fx-padding: 10px">
                 <VBox spacing="2">
                     <Text text="Samples"/>
-                    <TextField fx:id="samplesCountField"/>
+                    <TextField fx:id="samplesCountField" text="1000000"/>
                 </VBox>
                 <CheckBox text="Show preview" fx:id="showPreviewCheckbox" selected="true"/>
             </VBox>
         </TitledPane>
 
-        <Button text="Calculate" style="-fx-font-size: 250%" disable="true" fx:id="calculateButton"/>
+        <Button text="Calculate" style="-fx-font-size: 250%" fx:id="calculateButton"/>
 
         <VBox spacing="2" alignment="CENTER" fx:id="resultContainer" visible="false">
             <Text text="Result" style="-fx-font-size: 200%"/>
@@ -29,6 +29,14 @@
         </VBox>
 
         <ProgressBar visible="false" fx:id="progress"/>
+
+        <TitledPane text="All results" fx:id="allResultsPanel" disable="true">
+            <VBox spacing="10" style="-fx-padding: 10px" alignment="TOP_CENTER">
+                <ListView fx:id="allResultsList"/>
+                <Text text="Average PI value" style="-fx-font-size: 200%"/>
+                <Text fx:id="averageField"/>
+            </VBox>
+        </TitledPane>
     </VBox>
 
     <Canvas width="800" height="800" fx:id="canvas" GridPane.columnIndex="1"/>

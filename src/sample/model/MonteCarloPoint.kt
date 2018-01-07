@@ -1,4 +1,4 @@
-package sample.algorithm
+package sample.model
 
 import javafx.geometry.Point2D
 
