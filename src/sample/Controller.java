@@ -37,6 +37,8 @@ public class Controller {
     @FXML
     private CheckBox showPreviewCheckbox;
     @FXML
+    private CheckBox showShapesCheckbox;
+    @FXML
     private TitledPane allResultsPanel;
     @FXML
     private ListView<PiResult> allResultsList;
@@ -100,6 +102,10 @@ public class Controller {
                 drawPreview(image);
             }
 
+            if (showShapesCheckbox.selectedProperty().get()) {
+                drawShapes(canvas.getGraphicsContext2D());
+            }
+
             postCalculationViewActions();
         }).start();
     }
@@ -129,6 +135,7 @@ public class Controller {
 
     private void preCalculationViewActions() {
         Platform.runLater(() -> {
+            resultContainer.setVisible(false);
             calculateButton.setDisable(true);
             progress.setVisible(true);
         });
@@ -148,10 +155,15 @@ public class Controller {
 
     private void drawPreview(Image image) {
         Platform.runLater(() -> {
+            cleanCanvasBackground(canvas.getGraphicsContext2D());
             canvas.getGraphicsContext2D().drawImage(image, 0, 0);
+        });
+    }
 
-            drawSquare(canvas.getGraphicsContext2D());
-            drawCircle(canvas.getGraphicsContext2D());
+    private void drawShapes(GraphicsContext graphicsContext2D) {
+        Platform.runLater(() -> {
+            drawSquare(graphicsContext2D);
+            drawCircle(graphicsContext2D);
         });
     }
 
@@ -193,10 +205,11 @@ public class Controller {
 
     private void initializeCleanCanvas() {
         GraphicsContext context = canvas.getGraphicsContext2D();
-
         cleanCanvasBackground(context);
-        drawSquare(context);
-        drawCircle(context);
+
+        if (showShapesCheckbox.selectedProperty().get()) {
+            drawShapes(context);
+        }
     }
 
     private void cleanCanvasBackground(GraphicsContext context) {

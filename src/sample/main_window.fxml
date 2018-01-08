@@ -17,7 +17,8 @@
                     <Text text="Samples"/>
                     <TextField fx:id="samplesCountField" text="1000000"/>
                 </VBox>
-                <CheckBox text="Show preview" fx:id="showPreviewCheckbox" selected="true"/>
+                <CheckBox text="Draw preview" fx:id="showPreviewCheckbox" selected="true"/>
+                <CheckBox text="Draw shapes" fx:id="showShapesCheckbox" selected="true"/>
             </VBox>
         </TitledPane>
 
